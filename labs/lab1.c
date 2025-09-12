@@ -14,9 +14,9 @@ int main() {
 
   if (num_char != -1) {
     token = strtok_r(input, " ", &remainingStr);
-
+    printf("Tokens:\n");
     while (token != NULL) {
-      printf("%s\n", token);
+      printf("\t%s\n", token);
       token = strtok_r(NULL, " ", &remainingStr);
     }
   }
