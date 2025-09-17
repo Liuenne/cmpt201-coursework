@@ -1,0 +1,14 @@
+#include <stdio.h>
+/*#include <sys/types.h>*/
+#include <unistd.h>
+
+int main() {
+  // pid_t pid = fork();
+  int pid = fork();
+  if (pid != 0) {
+    execl("/bin/ls", "/bin/ls", "/home/cmpt201", "-a", NULL);
+  } else {
+    char *args[] = {"/bin/ls", "/home/cmpt201", "-alh", NULL};
+    execv("/bin/ls", args);
+  }
+}

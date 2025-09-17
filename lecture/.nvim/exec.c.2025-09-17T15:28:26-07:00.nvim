@@ -1,0 +1,11 @@
+#include <stdio.h>
+#include <unistd.h>
+
+int main() {
+  int pid = fork();
+  if (pid != 0) {
+    execl("/bin/ls", "/bin/ls", "/home/cmpt201", "-a", NULL);
+  } else {
+    execl("/bin/ls", "/bin/ls", "/home/cmpt201", "-a", "-l", "-h", NULL);
+  }
+}

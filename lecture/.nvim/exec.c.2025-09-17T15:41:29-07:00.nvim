@@ -1,0 +1,12 @@
+#include <stdio.h>
+#include <unistd.h>
+#include <sys/types.h>
+
+int main() {
+  pid_t pid = fork();
+  if (pid != 0) {
+    execl("/bin/ls", "/bin/ls", "/home/cmpt201", "-a", NULL);
+  } else {
+    execl("/bin/ls", "/bin/ls", "/home/cmpt201", "-a", "-l", "-h", NULL);
+  }
+}
