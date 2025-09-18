@@ -1,0 +1,19 @@
+#define _POSIX_C_SOURCE 200809L
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+
+int main() {
+  char *input = NULL;
+  size_t size = 0;
+  while (1) {
+    printf("Enter programs to run.\n> ");
+    ssize_t read = getline(&input, &size, stdin);
+    if (read > 0 && input[read - 1] == '\n') {
+      input[read - 1] = '\0';
+    }
+    printf("Executing");
+    execl(input, input);
+  }
+}
