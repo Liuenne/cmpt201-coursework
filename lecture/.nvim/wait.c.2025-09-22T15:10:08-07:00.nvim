@@ -1,0 +1,22 @@
+#include <stdio.h>
+#include <sys/types.h>
+#include <sys/wait.h>
+#include <unistd.h>
+
+int main() {
+  pid_t pid = fork();
+  if (pid == 0) {
+    /**(volatile int *)NULL; //null pointer force non-normal exit*/
+    execl("/bin/ls", "/bin/ls", "-a", "-l", NULL);
+  } else {
+    int status = 0;
+    if (waitpid(pid, &status, 0) == -1) {
+      perror("waitpid failed");
+    }
+    if (WIFEXITED(status)) {
+      printf("child done with status: %d\n", WEXITSTATUS(status));
+    } else {
+      printf("child exited non-normal\n");
+    }
+  }
+}
