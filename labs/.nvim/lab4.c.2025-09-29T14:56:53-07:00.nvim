@@ -1,0 +1,20 @@
+#include <stdint.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+
+struct header {
+  uint64_t size;
+  struct header *next;
+};
+
+#define BLK_SIZE 128
+
+int main() { 
+  void *base = sbrk(256); 
+
+
+
+
+}

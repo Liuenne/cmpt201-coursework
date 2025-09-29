@@ -1,0 +1,22 @@
+#define _DEFAULT_SOURCE
+#include <stdint.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+
+struct header {
+  uint64_t size;
+  struct header *next;
+};
+
+#define BLK_SIZE 128
+
+int main() {
+  void *base = sbrk(256);
+
+  if (base == (void *)-1) {
+    perror("sbrk failed");
+    return 1;
+  }
+}
