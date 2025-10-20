@@ -1,0 +1,31 @@
+#include <pthread.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <sys/types.h>
+#include <unistd.h>
+
+#define MAX 10000000
+
+int cnt = 0;
+
+void *thread_sum(void *arg) {
+  for (int i = 0; i < MAX; i++) {
+    cnt += 1;
+  }
+  return NULL;
+}
+
+int main() {
+  pthread_t thread_id;
+  pthread_create(&thread_id, NULL, thread_sum, NULL);
+  // Series
+  /*pthread_join(thread_id, NULL);*/
+
+  pthread_t thread_id2;
+  pthread_create(&thread_id2, NULL, thread_sum, NULL);
+  // parallel
+  pthread_join(thread_id, NULL);
+  pthread_join(thread_id2, NULL);
+
+  printf("The answer is: %d\n", cnt);
+}

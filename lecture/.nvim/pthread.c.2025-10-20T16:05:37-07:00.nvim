@@ -1,0 +1,41 @@
+#define _POSIX_C_SOURCE 200809L
+
+#define _GNU_SOURCE
+#include <pthread.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <sys/types.h>
+#include <unistd.h>
+
+void *thr_function(void *arg) {
+  char *str = (char *)arg;
+
+  pid_t tid = gettid();
+  printf("Thread: %d: Recieved string: '%s'\n", tid, str);
+  sleep(5);
+  return (void *)(strlen(str));
+}
+
+int main() {
+  pthread_t thread_id;
+  char *message = "Sleeping";
+
+  int result = pthread_create(&thread_id, NULL, thr_function, (void *)message);
+
+  if (result != 0) {
+    perror("error creating thread");
+    exit(1);
+  }
+
+  printf("Main thread created thread with TID: %lu\n",
+         (unsigned long)thread_id);
+
+  void *ret_val;
+  pthread_join(thread_id, &ret_val);
+
+  long long string_len = (long long)ret_val;
+
+  printf("Main thread: Thread returned: %lld\n", string_len);
+  return 0;
+}
