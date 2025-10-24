@@ -43,22 +43,17 @@ void insert_sorted(uint64_t data) {
     head = new_node;
   } else {
     node_t *curr = head;
-    node_t *prev = NULL;
 
     while (curr != NULL) {
       if (data < curr->data) {
         break;
       }
 
-      prev = curr;
       curr = curr->next;
     }
 
     if (curr != NULL) {
-      prev->next = new_node;
       new_node->next = curr;
-    } else {
-      prev->next = new_node;
     }
   }
 
