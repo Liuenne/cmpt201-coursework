@@ -5,6 +5,7 @@
 #include <unistd.h>
 
 #define MAX 10000000
+
 int cnt = 0;
 
 void *thread_sum(void *arg) {
