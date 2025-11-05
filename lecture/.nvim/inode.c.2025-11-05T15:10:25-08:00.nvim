@@ -1,0 +1,29 @@
+#define _POSIX_C_SOURCE 200809L
+
+#define _DEFAULT_SOURCE
+
+#include <sys/stat.h>
+#include <stdio.h>
+#include <stdint.h>
+#include <stdlib.h>
+
+int main(int argc, char *argv[]) {
+  struct stat sb;
+
+  if (argc != 2) {
+    fprintf(stderr, "Usage: %s <pathname>\n", argv[0]);
+    exit(EXIT_FAILURE);
+  }
+
+  if(lstat(argv[1], &sb) == -1) {
+    perror("lstat");
+    exit(EXIT_FAILURE);
+  }
+
+  switch(sb.st_mode & S_IFMT) {
+    case S_IFREG: printf("Regular file\n"); break;
+    case S_IFDIR: printf("Directory\n"); break;
+    default: printf("Other\n"); break;
+  }
+  exit(EXIT_SUCCESS);
+}
