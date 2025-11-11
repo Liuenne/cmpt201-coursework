@@ -1,0 +1,31 @@
+// this is client
+#include <stdio.h>
+#include <stdlib.h>
+#include <sys/socket.h>
+#include <sys/un.h>
+#include <unistd.h>
+
+
+int main() {
+  printf("client\n");
+
+  
+  // socket
+  int socket_fd = socket(AF_UNIX, SOCK_STREAM, 0);
+  if (socket_fd == -1) {
+    perror("socket failed");
+    exit(EXIT_FAILURE);
+  }
+  //connect
+  if (connect(socket_fd, ) == -1) {
+    perror("connect failed");
+    exit(EXIT_FAILURE);
+  }
+
+  //write
+  char *msg = "Socks suck (and Hello World).";
+
+  //close
+
+  return 0;
+}
