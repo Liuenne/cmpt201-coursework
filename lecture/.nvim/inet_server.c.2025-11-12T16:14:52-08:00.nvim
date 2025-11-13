@@ -1,0 +1,69 @@
+// this is server
+#include <errno.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <sys/socket.h>
+#include <sys/un.h>
+#include <unistd.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+
+int main() {
+  printf("server\n");
+
+  // socket
+  int socket_fd = socket(AF_INET, SOCK_STREAM, 0);
+  if (socket_fd == -1) {
+    perror("socket failed");
+    exit(EXIT_FAILURE);
+  }
+  // remove existing socket(if exists)
+  if (remove("socket_fun") == -1 && errno != ENOENT) {
+    perror("remove failed");
+    exit(EXIT_FAILURE);
+  }
+
+  // bind
+  struct sockaddr_in sockstruct;
+  memset(&sockstruct, 0, sizeof(struct sockaddr_in));
+  sockstruct.sin_family = AF_INET;
+  sockstruct.sin_port = htons(1042);
+  sockstruct.sin_addr.s_addr = htonl(INADDR_ANY);
+
+
+  if (bind(socket_fd, (struct sockaddr *)&sockstruct,
+           sizeof(struct sockaddr_in)) == -1) {
+    perror("bind failed");
+    exit(EXIT_FAILURE);
+  }
+  // listen
+  if (listen(socket_fd, 10) == -1) {
+    perror("listen failed");
+    exit(EXIT_FAILURE);
+  }
+  // accept
+  while (1) {
+    printf("accepting new clients...\n");
+    int connected_fd = accept(socket_fd, NULL, NULL);
+    if (connected_fd == -1) {
+      perror("accept failed");
+      exit(EXIT_FAILURE);
+    }
+    // read (maybe write)
+    const int SIZE = 1024;
+    char buff[SIZE];
+    int bytes_read;
+    while ((bytes_read = read(connected_fd, buff, SIZE)) > 0) {
+      write(STDOUT_FILENO, buff, bytes_read);
+    }
+    if (bytes_read == -1) {
+      perror("read failed");
+      exit(EXIT_FAILURE);
+    }
+    close(connected_fd);
+  }
+  // close()
+  close(socket_fd);
+  return 0;
+}
