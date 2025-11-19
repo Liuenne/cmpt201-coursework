@@ -1,0 +1,29 @@
+// server
+#include <stdio.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <fcntl.h>
+
+#define FIFO_FILE "myfifo"
+
+int main() {
+  int fd;
+  char readbuf[80];
+
+  if(mkfifo(FIFO_FILE, S_IRUSR | S_IWUSR) == -1 ) {
+    perror("mkfifo failed");
+    exit(EXIT_FAILURE);
+  }
+
+  fd = open(FIFO_FILE, O_RDONLY);
+  if (fd == -1) {
+    perror("open failed");
+    exit(EXIT_FAILURE);
+  }
+  int bytes_read = read(fd, readbuf, sizeof(readbuf));
+  readbuf[bytes_read] = '\0';
+
+  close(fd);
+}
