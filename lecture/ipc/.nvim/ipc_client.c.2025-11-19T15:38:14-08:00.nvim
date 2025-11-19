@@ -1,0 +1,20 @@
+// client
+#include <fcntl.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <unistd.h>
+
+#define FIFO_FILE "myfifo"
+
+int main() {
+  int fifo_fd;
+  char buffer[80];
+  int bytes_written;
+
+  if (access(FIFO_FILE, F_OK) == -1) {
+    perror("access failed");
+    exit(EXIT_FAILURE);
+  }
+}
