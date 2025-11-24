@@ -1,0 +1,49 @@
+ #define _POSIX_C_SOURCE 200809L
+#include <fcntl.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <sys/mman.h>
+#include <sys/stat.h>
+#include <unistd.h>
+
+#define BUF_SIZE 1024
+
+#define handle_error(msg)                                                      \
+  do {                                                                         \
+    perror(msg);                                                               \
+    exit(EXIT_FAILURE);                                                        \
+  } while (0)
+
+int main(int argc, char *argv[]) {
+  int fd;
+  char* addr;
+  if (argc != 2) {
+    fprintf(stderr, "%s <shared mem name>\n", argv[0]);
+    exit(EXIT_FAILURE);
+  }
+  fd = shm_open(argv[1], O_RDONLY | O_CREAT, 0);
+  if (fd == -1) {
+    handle_error("shm_open");
+  }
+
+  if (ftruncate(fd, BUF_SIZE) == -1) {
+    handle_error("ftruncate");
+  }
+
+  addr = mmap(NULL, BUF_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
+  if (addr == MAP_FAILED) {
+    handle_error("mmap");
+  }
+
+  char* msg;
+  int bytes_read = read(fd, &msg, BUF_SIZE);
+  if (bytes_read < 0) {
+    handle_error("read");
+  }
+
+  write(STDOUT_FILENO, msg, bytes_read);
+
+  munmap(addr, BUF_SIZE);
+  shm_unlink(argv[1]);
+  return 0;
+}
