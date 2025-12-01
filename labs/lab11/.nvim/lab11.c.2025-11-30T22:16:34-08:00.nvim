@@ -12,10 +12,10 @@
 
 #define MAX_FILE_SIZE 512
 
-#define handle_error(message)                                                  \
-  do {                                                                         \
-    perror(message);                                                           \
-    exit(EXIT_FAILURE);                                                        \
+#define handle_error(message)            \
+  do {                               \
+    perror(message);                     \
+    exit(EXIT_FAILURE);              \
   } while (0)
 
 size_t read_all_bytes(const char *filename, void *buffer, size_t buffer_size) {
@@ -75,7 +75,7 @@ int main() {
   pubkey = PEM_read_PUBKEY(pubfile, NULL, NULL, NULL);
   fclose(pubfile);
 
-  if (!pubkey) {
+  if(!pubkey) {
     handle_error("Error reading key");
   }
 
@@ -130,7 +130,7 @@ int verify(const char *message_path, const char *sign_path, EVP_PKEY *pubkey) {
     return -1;
   }
 
-  if (EVP_DigestVerifyUpdate(ctx, message, message_len) != 1) {
+  if (EVP_DigestVerifyUpdate(ctx,message,message_len) != 1) {
     EVP_MD_CTX_free(ctx);
     return -1;
   }
